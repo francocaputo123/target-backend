@@ -3,9 +3,8 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
-  
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "node src/index.js"
   },
   "repository": {
     "type": "git",
@@ -18,5 +17,11 @@
   "bugs": {
     "url": "https://github.com/francocaputo123/target-backend/issues"
   },
-  "homepage": "https://github.com/francocaputo123/target-backend#readme"
+  "homepage": "https://github.com/francocaputo123/target-backend#readme",
+  "dependencies": {
+    "cors": "^2.8.6",
+    "dotenv": "^17.4.2",
+    "express": "^5.2.1",
+    "zod": "^4.4.3"
+  }
 }
