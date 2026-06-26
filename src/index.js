@@ -2,6 +2,7 @@ import express from "express"
 import cors from "cors"
 import { corsOptions } from "./config/cors.js"
 import router from "./routes/api.js"
+import { colorize } from "./utils/colors.js"
 
 //puertos
 const PORT = process.env.PORT || 3000
@@ -10,7 +11,7 @@ const PORT = process.env.PORT || 3000
 const app = express()
 
 app.listen(PORT, () => {
-    console.log(`Server running on port: http://localhost/${PORT}`)
+    console.log(`${colorize("[SERVIDOR]", "green")} Servidor levantado en el puerto: http://localhost:${PORT}`)
 })
 
 //MIDDLEWARES

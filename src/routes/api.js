@@ -16,14 +16,24 @@ const router = Router()
 const validator = urlValidator
 const protectedValidator = protectedUrl
 
+//ruta principal de escaneo
 router.post("/scan", validator, protectedValidator, AnalyzerController.scan)
 
-//ruta solo de verificacion
+//ruta solo de prueba
 router.get("/sanity-check", (req,res) => {
     res.status(200).json({
         "status" : "success",
         "message" : "Server is running"
     })
 })
+
+//Es solo un manejador en caso de que la ruta no exista
+router.use((req,res) => {
+    res.status(404).json({
+        "status" : false,
+        "message" : "La ruta a la que intentaste acceder no existe."
+    })
+})
+
 
 export default router
