@@ -18,6 +18,7 @@ export const urlValidator = (req, res, next) => {
 
     try {
         //validamos el esquema y lo volvemos a pasar al body
+        const { url } = req.body
         req.body = urlSchema.parse(req.body)
         next()
     } catch (errors) {
