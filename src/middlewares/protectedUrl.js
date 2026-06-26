@@ -3,7 +3,7 @@ Este middleware contiene validaciones de protocolos http provenientes de la url
 ademas de proteger contra urls privadas 
 */
 
-import URL from "url"
+import { URL } from "url"
 
 
 export const protectedUrl  = (req,res,next) => {
@@ -12,7 +12,7 @@ export const protectedUrl  = (req,res,next) => {
         const parsedUrl = new URL(url)
 
         //SOLO PROTOCOLOS HTTP/S
-        if(parsedUrl.protocol !== "http:" || parsedUrl.protocol !== "https:") {
+        if(parsedUrl.protocol !== "http:" && parsedUrl.protocol !== "https:") {
             return res.status(400).json({
                 "success" : false,
                 "message" : "Solo se permiten protocolos http y https." 
@@ -36,10 +36,11 @@ export const protectedUrl  = (req,res,next) => {
             })
         }
         next()
-    } catch (error) {
+    } catch (errors) {
         return res.status(400).json({
             "status" : false,
-            "message" : "Error al procesar la URL"
+            "message" : "Error al procesar la URL",
+            errors : errors.errors
         })
     }
 }
