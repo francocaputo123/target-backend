@@ -1,6 +1,6 @@
 /*
 
-Este middleware servira para la validacion de la url. Se encara de sanitizar la url y
+Este middleware sirve para la validación de la url. Se encarga de sanitizar la url y
 verificar que sea correcta.
 
 */
@@ -21,24 +21,27 @@ export const urlValidator = (req, res, next) => {
     try {
         //validamos el esquema y lo volvemos a pasar al body
         const { url } = req.body
-        //se verifica primero si no la url NO es un valor no permitido
+        //se verifica primero si la url NO es un valor no permitido
         const notAllowed = [null, "", undefined]
 
         if(Object.values(notAllowed).includes(url)) {
+            console.log(`${colorize("[ERROR]", "red")} No hay URL`)
             return res.status(400).json({
                 "success" : false,
                 "message" : "La URL es requerida."
             })
         }
         //se le pasa al siguiente middleware
-        console.log(`${colorize("[SERVIDOR]", "yellow")} Primer middleware validado correctamente`)
         req.body = urlSchema.parse(req.body)
+        console.log(`${colorize("[SERVIDOR]", "yellow")} Primer middleware validado correctamente`)
         next()
+
     } catch (errors) {
+        console.log(`${colorize("[ERROR]", "red")} Error en el primer middleware`)
         return res.status(400).json({
             "success" : false,
             "message" : "Datos inválidos",
-            errors : errors.errors
+            "errors" : errors.message
         })
     }
 }

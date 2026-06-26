@@ -11,7 +11,7 @@ export const protectedUrl  = (req,res,next) => {
         const { url } = req.body
         const parsedUrl = new URL(url)
 
-        //SOLO PROTOCOLOS HTTP/S
+        //Solo protocolos HTTP/S
         if(parsedUrl.protocol !== "http:" && parsedUrl.protocol !== "https:") {
             return res.status(400).json({
                 "success" : false,
@@ -30,15 +30,17 @@ export const protectedUrl  = (req,res,next) => {
         ]
 
         if(notAllowed.includes(host)) {
+            console.log(`${colorize("[ERROR]", "red")} La URL no es válida`)
             return res.status(400).json({
                 "success" : false,
-                "message" : "Acceso denegado: URL."
+                "message" : "Acceso denegado: URL inválida."
             })
         }
 
         console.log(`${colorize("[SERVIDOR]", "yellow")} Segundo middleware validado correctamente`)
         next()
     } catch (errors) {
+        console.log(`${colorize("[ERROR]", "red")} Error en el segundo middleware`)
         return res.status(400).json({
             "status" : false,
             "message" : "Error al procesar la URL",

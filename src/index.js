@@ -7,7 +7,7 @@ import { colorize } from "./utils/colors.js"
 //puertos
 const PORT = process.env.PORT || 3000
 
-//inicializacion de express
+//inicialización de express
 const app = express()
 
 app.listen(PORT, () => {

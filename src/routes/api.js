@@ -1,14 +1,15 @@
 /*
-En este archivo iran todas las rutas que contendra el backend.
+En este archivo irán todas las rutas que contendrá el backend.
 */
 
 //controller
 import * as AnalyzerController from "../controller/analyzer.controller.js"
 
-//middlewares
+//importación de middlewares
 import { urlValidator } from "../middlewares/urlValidator.js";
 import { protectedUrl } from "../middlewares/protectedUrl.js";
 
+//express
 import { Router } from "express";
 
 //MIDDLEWARES

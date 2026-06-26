@@ -8,6 +8,9 @@ export const scan = async (req,res) => {
 
         console.log(`${colorize("[RECIBIDA]", "green")} URL recibida: ${url}`)
 
+        //acá se traerán los datos del robot
+        const response = null
+
         return res.status(200).json({
             "messgae" : "Its working " + url
         })
