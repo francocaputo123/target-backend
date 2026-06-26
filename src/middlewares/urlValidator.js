@@ -19,6 +19,14 @@ export const urlValidator = (req, res, next) => {
     try {
         //validamos el esquema y lo volvemos a pasar al body
         const { url } = req.body
+        
+        if(!url) {
+            return res.status(400).json({
+                "success" : false,
+                "message" : "La URL es requerida." 
+            })
+        }
+
         req.body = urlSchema.parse(req.body)
         next()
     } catch (errors) {
