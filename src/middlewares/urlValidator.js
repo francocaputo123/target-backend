@@ -6,6 +6,7 @@ verificar que sea correcta.
 */
 
 import {z} from "zod"
+import { colorize } from "../utils/colors.js"
 
 export const urlValidator = (req, res, next) => {
     //definimos el esquema con zod
@@ -30,6 +31,7 @@ export const urlValidator = (req, res, next) => {
             })
         }
         //se le pasa al siguiente middleware
+        console.log(`${colorize("[SERVIDOR]", "yellow")} Primer middleware validado correctamente`)
         req.body = urlSchema.parse(req.body)
         next()
     } catch (errors) {

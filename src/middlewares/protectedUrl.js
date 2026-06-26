@@ -1,10 +1,10 @@
 /*
 Este middleware contiene validaciones de protocolos http provenientes de la url
-ademas de proteger contra urls privadas 
+ademas de proteger contra urls privadas
 */
 
 import { URL } from "url"
-
+import { colorize } from "../utils/colors.js"
 
 export const protectedUrl  = (req,res,next) => {
     try {
@@ -15,7 +15,7 @@ export const protectedUrl  = (req,res,next) => {
         if(parsedUrl.protocol !== "http:" && parsedUrl.protocol !== "https:") {
             return res.status(400).json({
                 "success" : false,
-                "message" : "Solo se permiten protocolos http y https." 
+                "message" : "Solo se permiten protocolos http y https."
             })
         }
 
@@ -35,6 +35,8 @@ export const protectedUrl  = (req,res,next) => {
                 "message" : "Acceso denegado: URL."
             })
         }
+
+        console.log(`${colorize("[SERVIDOR]", "yellow")} Segundo middleware validado correctamente`)
         next()
     } catch (errors) {
         return res.status(400).json({
