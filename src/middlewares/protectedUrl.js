@@ -35,8 +35,11 @@ export const protectedUrl  = (req,res,next) => {
                 "message" : "Acceso denegado: URL."
             })
         }
-
+        next()
     } catch (error) {
-        
+        return res.status(400).json({
+            "status" : false,
+            "message" : "Error al procesar la URL"
+        })
     }
 }
