@@ -13,8 +13,8 @@ import { Router } from "express";
 
 //MIDDLEWARES
 const router = Router()
-const validator = urlValidator()
-const protectedValidator = protectedUrl()
+const validator = urlValidator
+const protectedValidator = protectedUrl
 
 router.post("/scan", validator, protectedValidator, AnalyzerController.scan)
 
