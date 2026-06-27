@@ -18,23 +18,8 @@ export const robotHandler = async (url, jobId) => {
             "message" : "Robot iniciado"
         })
     
-        // simulacion de datos
-        await new Promise(resolve => setTimeout(resolve, 2000));
-        emiter.emit('robotUpdate', {
-            jobId,
-            status: "Progreso",
-            message: "Extrayendo productos de la primera página..."
-        });
-        
-        
-        await new Promise(resolve => setTimeout(resolve, 2000));
-        
-        // fin simulacion
-        const data = [
-            { producto: "Teclado Mecánico RGB", precio: "$45.000" },
-            { producto: "Mouse Óptico Gamer", precio: "$18.200" }
-        ];
-        
+        const data = null
+
         //una vez finalizado, se emite el evento con los datos.
         emiter.emit('robotUpdate', {
             jobId,
