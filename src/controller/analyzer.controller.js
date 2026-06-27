@@ -70,6 +70,7 @@ export const getData = (req,res) => {
             res.end()
         })
     } catch (error) {
+        console.log(`${colorize("[ERROR]", "red")} Hubo un error en el servidor`)
         return res.status(500).json({
             "status" : "Error",
             "message" : "Error en el servidor",
