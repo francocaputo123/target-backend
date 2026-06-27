@@ -38,10 +38,22 @@ export const urlValidator = (req, res, next) => {
 
     } catch (errors) {
         console.log(`${colorize("[ERROR]", "red")} Error en el primer middleware`)
+        
+        //solo para que devuelva mas legible
+        if (errors instanceof z.ZodError) {
+        const fieldErrors = z.flattenError(errors).fieldErrors
+
+        return res.status(400).json({
+            "success": false,
+            "message": "Datos inválidos",
+            "errors": fieldErrors 
+        });
+        }
+
         return res.status(400).json({
             "success" : false,
             "message" : "Datos inválidos",
-            "errors" : errors.message
+            "errors" : errors
         })
     }
 }

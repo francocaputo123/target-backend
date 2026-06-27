@@ -17,8 +17,9 @@ const router = Router()
 const validator = urlValidator
 const protectedValidator = protectedUrl
 
-//ruta principal de escaneo
+//rutas principales de escaneo
 router.post("/scan", validator, protectedValidator, AnalyzerController.scan)
+router.get("/get-data/:jobId", AnalyzerController.getData)
 
 //ruta solo de prueba
 router.get("/sanity-check", (req,res) => {

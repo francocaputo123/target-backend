@@ -3,6 +3,7 @@ import cors from "cors"
 import { corsOptions } from "./config/cors.js"
 import router from "./routes/api.js"
 import { colorize } from "./utils/colors.js"
+import { limit } from "./config/limiter.js"
 
 //puertos
 const PORT = process.env.PORT || 3000
@@ -18,6 +19,7 @@ app.listen(PORT, () => {
 app.use(cors(corsOptions))
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
+app.use(limit)
 
 //ruta principal
 app.use("/api", router)
