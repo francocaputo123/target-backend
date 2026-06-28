@@ -30,6 +30,7 @@ export const imageHandler = async (url, jobId, imgName) => {
 
         //se retorta al robot para que use
         const baseUrl = process.env.BACKEND_URL || "http://localhost:3000";
+        console.log(`${colorize("[SERVER]"), "green"} La imagen se guardo exitosamente`)
         return `${baseUrl}/public/uploads/${newName}`;
     } catch (error) {
         console.log(`${colorize("[ERROR]"), "red"} Fallo en el handler: ${error}`)
