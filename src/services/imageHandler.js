@@ -14,7 +14,7 @@ export const imageHandler = async (url, jobId, imgName) => {
         //se hace un fetch para descargar la imagen
         const response = await fetch(url);
 
-        if(!response) throw new Error("La url no devolvio nada")
+        if(!response.ok) throw new Error("La url no devolvio nada")
 
         //temporalmente se convierte en un archivo binario asi podemos manejarlo correctamente
         const buffer = Buffer.from(await response.arrayBuffer());
@@ -32,8 +32,7 @@ export const imageHandler = async (url, jobId, imgName) => {
         const baseUrl = process.env.BACKEND_URL || "http://localhost:3000";
         console.log(`${colorize("[SERVER]"), "green"} La imagen se guardo exitosamente`)
         return `${baseUrl}/public/uploads/${newName}`;
-    } catch (error) {
-        console.log(`${colorize("[ERROR]"), "red"} Fallo en el handler: ${error}`)
+    } catch (error) { console.log(`${colorize("[ERROR]"), "red"} Fallo en el handler: ${error}`)
         return null;
     }
 };
