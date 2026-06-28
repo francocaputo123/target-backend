@@ -1,6 +1,6 @@
 import { EventEmitter } from "events"
 import { colorize } from "../utils/colors.js"
-//import { index-robot } from "./services/index-robot.js"
+import { ejecutarRobot } from "./robot/index-robot.js"
 
 export const emiter = new EventEmitter()
 
@@ -19,7 +19,7 @@ export const robotHandler = async (url, jobId) => {
             "message" : "Robot iniciado"
         })
 
-        const data = null
+        const data = await ejecutarRobot(url)
 
         //una vez finalizado, se emite el evento con los datos.
         emiter.emit('robotUpdate', {
