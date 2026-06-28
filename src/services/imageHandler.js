@@ -27,7 +27,7 @@ export const imageHandler = async (url, jobId, imgName) => {
         //finalmente se escribe el archivo en la carpeta que se le indico
         await fs.writeFile(pathUpload, buffer);
 
-        //se retorta al robot para que use
+        //se retorna al robot para que use
         const baseUrl = process.env.BACKEND_URL || "http://localhost:3000";
         console.log(`${colorize("[SERVER]", "green")} La imagen se guardo exitosamente`)
         return `${baseUrl}/public/uploads/${newName}`;
