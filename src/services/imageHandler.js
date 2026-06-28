@@ -23,7 +23,6 @@ export const imageHandler = async (url, jobId, imgName) => {
         const newName = `${jobId}_${imgName.toLowerCase().replace(/ /g, "_")}.jpg`;
 
         const pathUpload = path.join(process.cwd(), 'src', 'public', 'uploads', newName);
-        console.log(pathUpload)
 
         //finalmente se escribe el archivo en la carpeta que se le indico
         await fs.writeFile(pathUpload, buffer);
