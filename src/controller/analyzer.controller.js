@@ -3,6 +3,7 @@ import { uuid } from "zod"
 import { robotHandler } from "../services/robotHandler.js"
 import { EventEmitter } from "events"
 import { emiter } from "../services/robotHandler.js"
+import { aiHandler } from "../services/aiHandler.js"
 
 //ruta principal de escaneo
 export const scan = async (req,res) => {
@@ -18,7 +19,7 @@ export const scan = async (req,res) => {
 
         /*esta funcion empezara un evento el cual se llama robotUpdate. Se va a subscribir a ese evento
         y el robot enviara la informacion. Esto para que el front no nos de un error de timeout.
-        */ 
+        */
         robotHandler(url, jobId)
 
         return res.status(200).json({
@@ -49,9 +50,13 @@ export const getData = (req,res) => {
         })
 
         //creamos una funcion. Esta nos servira para subscribirla al evento y que maneje los datos que trae del robot.
-        const handler = (evt) => {
+        const handler = async (evt) => {
             if (evt.jobId !== jobId) return
 
+            if(evt.status === "Completado" && evt.data) {
+
+                evt.iaResponse = await aiHandler(evt.data);
+            }
             //se envian los datos al cliente
             res.write(`data: ${JSON.stringify(evt)}\n\n`)
 
