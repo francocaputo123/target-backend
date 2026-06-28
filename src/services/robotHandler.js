@@ -1,10 +1,11 @@
 import { EventEmitter } from "events"
 import { colorize } from "../utils/colors.js"
+//import { index-robot } from "./services/index-robot.js"
 
 export const emiter = new EventEmitter()
 
 /*
-Esta funcion es un envoltorio del roobot, se encarga de ir enviando mediante el evento 
+Esta funcion es un envoltorio del roobot, se encarga de ir enviando mediante el evento
 "robotUpdate" la informacion que vaya trayendo de la pagina.
 */
 
@@ -17,7 +18,7 @@ export const robotHandler = async (url, jobId) => {
             "status" : "Iniciado",
             "message" : "Robot iniciado"
         })
-    
+
         const data = null
 
         //una vez finalizado, se emite el evento con los datos.
@@ -30,7 +31,7 @@ export const robotHandler = async (url, jobId) => {
         console.log(`${colorize("[ROBOT]", "green")} Datos enviados`)
     } catch (error) {
         emiter.emit('robotUpdate', {
-            jobId, 
+            jobId,
             "status" : "Error",
             "message" : "Error trayendo los datos",
             "error" : error
