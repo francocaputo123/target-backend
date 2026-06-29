@@ -1,0 +1,115 @@
+<!--
+Este archivo muestra un ejemplo de implementacion con SSE.
+El backend esta hecho para evitar el polling, evitando el trafico y la sobrecarga del servidor
+evitando constantmente peticiones http del cliente.
+Para eso, hay que generar un EventSource asi el cliente se mantiene conectado al SSE del servidor
+y recibe las respuestas de manera unidireccional (server -> cliente)
+-->
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Ejemplo SSE</title>
+    <style>
+        body { font-family: sans-serif; margin: 30px; }
+        input[type="text"] { width: 400px; padding: 8px; margin-right: 15px; }
+        label { margin-right: 15px; cursor: pointer; }
+        button { padding: 8px 15px; cursor: pointer; }
+        pre { margin-top: 25px; background: #1e1e1e; color: #00ff00; padding: 15px; height: 350px; overflow: auto; }
+    </style>
+</head>
+<body>
+
+<h2>Scrapper</h2>
+
+<input id="url" type="text" placeholder="https://ejemplo.com" />
+<label><input type="checkbox" id="usarIA"> Con IA</label>
+<button onclick="scan()">Iniciar</button>
+
+<pre id="log"></pre>
+
+<script>
+const API = "http://localhost:3000/api";
+let eventSource = null;
+
+function write(texto) {
+    const log = document.getElementById("log");
+    log.textContent += texto + "\n";
+    log.scrollTop = log.scrollHeight;
+}
+
+async function scan() {
+    const url = document.getElementById("url").value.trim();
+    const aiResponse = document.getElementById("usarIA").checked;
+
+    if (!url) return alert("Ingrese una URL");
+    write("Enviando petición de escaneo");
+
+    try {
+        /*
+        Importante enviar aiResponse si se requiere o no analisis de IA sobre el scrapping, es un booleano.
+        En primer lugar, enviar la peticion a post, esta devolvera un id unico que se le debera pasar a la siguiente ruta:
+        get-data, la cual recibe el id por params.
+        */
+        const response = await fetch(`${API}/scan`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ url, aiResponse })
+        });
+
+        const data = await response.json();
+        write(`ID generado: ${data.jobId}`);
+        listen(data.jobId);
+    } catch (err) {
+        write("Error al conectar con la API de escaneo");
+    }
+}
+
+function listen(jobId) {
+
+    /*
+        Aca el cliente inicia un eventsource y se conecta al SSE del backend que,
+        cada que haya una repsuesta, el front la recibira por este canal. La ruta es get-data
+    */
+    if (eventSource) eventSource.close();
+
+    eventSource = new EventSource(`${API}/get-data/${jobId}`);
+
+    eventSource.onopen = () => write("Conexión SSE abierta de manera exitosa.");
+
+    eventSource.onmessage = (event) => {
+        /*
+        El backend tiene 3 estados y dos envian datos:
+        DATA_RESPONSE: Es la informacion que llega del scrapping y es la primera en llegar.
+        AI_RESPONSE : Es la informacion que llega del analisis de la IA. Esta es opciona y se debe mandar
+        el parametro aiResponse (true o false) para requerirla.
+        COMPLETE : Es el estado final del servidor, es la respuesta que se da siempre si el servidor no falla y la que tambien
+        cierra la conexion.
+        */
+        const datos = JSON.parse(event.data);
+        write(`[${datos.status}] -> Procesando evento`);
+
+        if (datos.status === "DATA_RESPONSE") {
+            write(`Scraper Data: ${JSON.stringify(datos.data, null, 2)}`);
+        }
+
+        if (datos.status === "AI_RESPONSE") {
+            write(`IA Analysis: ${JSON.stringify(datos.aiResponse, null, 2)}`);
+        }
+
+        if (datos.status === "COMPLETE" || datos.status === "Error") {
+            write(`Flujo terminado. Estado final: ${datos.status}`);
+            eventSource.close(); //siempre cerrar la conexion
+        }
+    };
+
+    eventSource.onerror = () => {
+        write("Conexión finalizada por el servidor.");
+        eventSource.close();
+    };
+}
+</script>
+
+</body>
+</html>

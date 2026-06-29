@@ -15,7 +15,8 @@ export const urlValidator = (req, res, next) => {
         .trim()
         .min(1, "La url es requerida.")
         .max(2048, "La url es demasiado larga")
-        .url("El formato URL no es válido.")
+        .url("El formato URL no es válido."),
+        aiResponse: z.boolean().optional()
     })
 
     try {
@@ -38,7 +39,7 @@ export const urlValidator = (req, res, next) => {
 
     } catch (errors) {
         console.log(`${colorize("[ERROR]", "red")} Error en el primer middleware`)
-        
+
         //solo para que devuelva mas legible
         if (errors instanceof z.ZodError) {
         const fieldErrors = z.flattenError(errors).fieldErrors
@@ -46,7 +47,7 @@ export const urlValidator = (req, res, next) => {
         return res.status(400).json({
             "success": false,
             "message": "Datos inválidos",
-            "errors": fieldErrors 
+            "errors": fieldErrors
         });
         }
 

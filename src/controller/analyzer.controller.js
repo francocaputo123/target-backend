@@ -9,7 +9,7 @@ import { aiHandler } from "../services/aiHandler.js"
 export const scan = async (req,res) => {
 
     try {
-        const { url } = req.body
+        const { url, aiResponse} = req.body
 
         console.log(`${colorize("[RECIBIDA]", "green")} URL recibida: ${url}`)
 
@@ -20,7 +20,8 @@ export const scan = async (req,res) => {
         /*esta funcion empezara un evento el cual se llama robotUpdate. Se va a subscribir a ese evento
         y el robot enviara la informacion. Esto para que el front no nos de un error de timeout.
         */
-        robotHandler(url, jobId)
+
+        robotHandler(url, jobId, aiResponse)
 
         return res.status(200).json({
             "success" : true,
@@ -51,18 +52,19 @@ export const getData = (req,res) => {
 
         //creamos una funcion. Esta nos servira para subscribirla al evento y que maneje los datos que trae del robot.
         const handler = async (evt) => {
-            if (evt.jobId !== jobId) return
+            if (evt.jobId !== jobId || !jobId){
 
-            if(evt.status === "Completado" && evt.data) {
-
-                evt.iaResponse = await aiHandler(evt.data);
+                return res.status(400).json({
+                    "status" : false,
+                    "message" : "Id incorrecto o faltante."
+                })
             }
             //se envian los datos al cliente
             res.write(`data: ${JSON.stringify(evt)}\n\n`)
 
             console.log(`${colorize("[SERVIDOR]", "green")} Datos del robot recibidos`)
 
-            if(evt.status === "Completado" || evt.status === "Error") {
+            if(evt.status === "COMPLETE" || evt.status === "ERROR") {
                 emiter.off('robotUpdate', handler)
                 res.end()
             }
@@ -75,10 +77,10 @@ export const getData = (req,res) => {
             res.end()
         })
     } catch (error) {
-        console.log(`${colorize("[ERROR]", "red")} Hubo un error en el servidor`)
+        console.log(`${colorize("[ERROR]", "red")} Hubo un error en el servidor ${error}`)
         return res.status(500).json({
             "status" : "Error",
-            "message" : "Error en el servidor",
+            "message" : "Error en el servidor " + error,
             "error" : error
         })
     }
